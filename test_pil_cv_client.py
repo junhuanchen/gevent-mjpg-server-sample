@@ -4,6 +4,7 @@ import io
 from PIL import Image, ImageDraw, UnidentifiedImageError
 import cv2
 import numpy as np
+import socket
 
 def test_data_jpg():
     img = Image.new('RGB', (200, 100), (255, 255, 255))
@@ -16,11 +17,6 @@ def test_data_jpg():
     jpg_bytes.seek(0)
     return jpg_bytes
 
-def test_tcp_jpg(tcp_bytes):
-    jpg_bytes = io.BytesIO()
-    jpg_bytes.write(tcp_bytes)
-    return jpg_bytes
-
 def test_jpeg(bytes):
     """JPEG data in JFIF or Exif format"""
     result = None
@@ -30,18 +26,27 @@ def test_jpeg(bytes):
         result = 'jpeg'
     return result
     
-def test_show_jpg(jpg_bytes):
+def test_send_jpg(sock, jpg_bytes):
     # jpg_bytes.seek(0) # test bad jpeg
     # jpg_bytes.write(b'\xee')
     if test_jpeg(jpg_bytes.getvalue()) == "jpeg":
-        img = cv2.imdecode(np.frombuffer(jpg_bytes.getvalue(), np.uint8), cv2.IMREAD_COLOR)
-        cv2.imshow('test1', img)
-        cv2.imshow('test2', img)
-        cv2.waitKey(10)
-
-test_show_jpg(test_data_jpg())
+        sock.send(jpg_bytes.getvalue())
 
 if __name__ == '__main__':
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # sock.connect(('127.0.0.0', 7000))
+    # test_send_jpg(sock, test_data_jpg())
     while True:
-        test_show_jpg(test_data_jpg())
+        try:
+            sock.connect(('127.0.0.1', 7000))
+            while True:
+                # test_send_jpg(sock, test_data_jpg())
+                sock.send('hello'.encode())
+                print(time.time())
+        except ConnectionRefusedError:
+            print("ConnectionRefusedError")
+            time.sleep(1)
+        except BrokenPipeError:
+            print("BrokenPipeError")
+            time.sleep(1)
         print(time.time())
