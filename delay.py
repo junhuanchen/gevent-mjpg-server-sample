@@ -154,7 +154,7 @@ def timeout(seconds=None, errback=None):
             except gevent.Timeout as t:
                 assert timer == t, t
                 if errback: errback(t)
-                print "Timeout!"
+                print("Timeout!")
                 return t
             finally:
                 if timer:
@@ -179,7 +179,7 @@ def timeout_partial(seconds=None, func=None, *args, **kw):
         ret = func(*args, **kw)
     except gevent.Timeout as t:
         assert timer == t, t
-        print "Timeout!"
+        print("Timeout!")
         return t
     finally:
         if timer:
@@ -196,7 +196,7 @@ if __name__ == "__main__":
             self.set_timeout(10)
               
         def on_timeout(self):
-            print "timeout..."
+            print("Timeout!")
               
     tt = TestTimeout()
     
@@ -205,12 +205,12 @@ if __name__ == "__main__":
         gevent.sleep(5)
         return 2
     ret = test()
-    print type(ret)
-    print isinstance(ret, BaseException)
+    print(type(ret))
+    print(isinstance(ret, BaseException))
     
     def test2():
         gevent.sleep(5)
-    print "t:", timeout_partial(3, test2) 
+    print("t:", timeout_partial(3, test2)) 
     
     gevent.wait()
         

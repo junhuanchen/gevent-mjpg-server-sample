@@ -36,7 +36,7 @@ class EndPoint(gevent.Greenlet):
                 # FIXME: 改为makefile接口
                 length = timeout_partial(10, self.transport.recv, 4) # 读头心跳10s
                 if isinstance(length, BaseException):
-                    print "heartbeat header timeout..."
+                    print("heartbeat header timeout...")
                     # to do something
                     return
                 if not length:
@@ -48,7 +48,7 @@ class EndPoint(gevent.Greenlet):
                 # FIXME: 改为makefile接口
                 data = timeout_partial(20, self.transport.recv, length) # 读内容心跳20s
                 if isinstance(data, BaseException):
-                    print "heartbeat data timeout..."
+                    print("heartbeat data timeout...")
                     # to do something
                     return
             except:
@@ -127,6 +127,6 @@ if __name__ == "__main__":
     sock = create_connection(("127.0.0.1", 7000))
     sock.sendall(struct.pack(">I5s", 5, "hello"))
     sf = sock.makefile(mode="r")
-    print repr(sf.read(10))
+    print(repr(sf.read(10)))
 #     while True:
 #         print repr(sock.recv(10))

@@ -16,7 +16,7 @@ class Bot(EndPoint):
         print("Bot {0} lost".format(id(self)))
 
     def on_data(self, data):
-        print '%s: got %r ' % (self, data)
+        print('%s: got %r ' % (self, data))
         self.put_data(data)
 
 
