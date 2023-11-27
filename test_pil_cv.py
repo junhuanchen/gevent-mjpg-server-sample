@@ -24,9 +24,7 @@ def test_tcp_jpg(tcp_bytes):
 def test_jpeg(bytes):
     """JPEG data in JFIF or Exif format"""
     result = None
-    # if bytes[6:10] in (b'JFIF', b'Exif'):
-    #     return 'jpeg'
-    if bytes.startswith(b'\xff\xd8') and bytes.endswith(b'\xff\xd9'):
+    if bytes.startswith(b'\xff\xd8') and bytes.endswith(b'\xff\xd9') and bytes[6:10] in (b'JFIF', b'Exif'):
         result = 'jpeg'
     return result
     
