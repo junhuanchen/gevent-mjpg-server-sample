@@ -37,11 +37,15 @@ class TCPManager(gevent.Greenlet):
                     jpeg_bytes = data[:jpeg_end+2]
                     data = data[jpeg_end+2:]
                     # print("jpeg_bytes: ", jpeg_bytes)
-                    if jpeg_bytes[6:10] in (b'JFIF', b'Exif'):
-                        img = cv2.imdecode(np.frombuffer(jpeg_bytes, np.uint8), cv2.IMREAD_COLOR)
+                    img = cv2.imdecode(np.frombuffer(jpeg_bytes, np.uint8), cv2.IMREAD_COLOR)
+                    # cv2.imshow(addr[0], img) # 正常来说一个 ip 只有一个窗口，所以只会同步到一个窗口上
+                    cv2.imshow(str(addr), img) # 多例测试，方便做接收压力测试
+                    cv2.waitKey(10)
+                    #if jpeg_bytes[6:10] in (b'JFIF', b'Exif'): # 个别jpg编码文件不规范，会导致解码失败
+                        #img = cv2.imdecode(np.frombuffer(jpeg_bytes, np.uint8), cv2.IMREAD_COLOR)
                         # cv2.imshow(addr[0], img) # 正常来说一个 ip 只有一个窗口，所以只会同步到一个窗口上
-                        cv2.imshow(str(addr), img) # 多例测试，方便做接收压力测试
-                        cv2.waitKey(10)
+                        #cv2.imshow(str(addr), img) # 多例测试，方便做接收压力测试
+                        #cv2.waitKey(10)
                 elif len(data) > 1024*1024: # 过大都没有收到尾部则放弃这个buffer
                     data = b''
             # except ConnectionResetError as e:
